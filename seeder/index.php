@@ -1,55 +1,70 @@
 <?php
 /**
- * SEEDER NO ALEATORIO – FP 2018/2019
- * php seeder/index.php
+ * SEEDER DETERMINISTA – FP
+ * Ejecutar: php seeder/index.php
  */
 
 if (php_sapi_name() !== 'cli') {
-    exit("Solo CLI\n");
+    exit("Solo se puede ejecutar desde CLI\n");
 }
 
 require_once __DIR__ . '/../config/database.php';
 
 $uploadsDir = __DIR__ . '/../uploads/';
 $videosDir  = __DIR__ . '/videos/';
-$csvFile    = __DIR__ . '/Taules_cataleg_FP_18-19-LOE.csv';
 
-echo "🚀 Seeder determinista iniciado\n";
+echo "🚀 Iniciando seeder...\n";
+
+$pdo->beginTransaction();
+
+try {
 
 /* -------------------------------------------------
-   1. FAMILIAS PROFESIONALES FIJAS
+   0. LIMPIAR BASE DE DATOS
 -------------------------------------------------- */
+echo "🧹 Limpiando base de datos...\n";
 
-$familiasPermitidas = [
-    'Informàtica i comunicacions',
-    'Administració i gestió',
-    'Electricitat i electrònica',
-    'Sanitat',
-    'Comerç i màrqueting',
-    'Fabricació mecànica'
+$pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+$pdo->exec("TRUNCATE video_tags");
+$pdo->exec("TRUNCATE videos");
+$pdo->exec("TRUNCATE tags");
+$pdo->exec("TRUNCATE centres");
+$pdo->exec("TRUNCATE empreses");
+$pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
+
+/* -------------------------------------------------
+   1. FAMILIAS Y CICLOS (FIJOS)
+-------------------------------------------------- */
+$famCicles = [
+    'Informàtica i comunicacions' => [
+        'SMX', 'ASIX', 'DAM', 'DAW'
+    ],
+    'Administració i gestió' => [
+        'Gestió Administrativa',
+        'Administració i Finances'
+    ],
+    'Electricitat i electrònica' => [
+        'Instal·lacions Elèctriques',
+        'Automatització i Robòtica'
+    ],
+    'Sanitat' => [
+        'Cures Auxiliars d’Infermeria',
+        'Laboratori Clínic'
+    ],
+    'Comerç i màrqueting' => [
+        'Activitats Comercials',
+        'Màrqueting i Publicitat'
+    ],
+    'Fabricació mecànica' => [
+        'Mecanitzat',
+        'Programació de la Producció'
+    ]
 ];
 
-$famCicles = [];
-
-/* Leer CSV */
-if (($h = fopen($csvFile, 'r')) !== false) {
-    fgetcsv($h, 0, ';'); // header
-    while (($row = fgetcsv($h, 0, ';')) !== false) {
-        $familia = trim($row[1]);
-        $cicle   = trim($row[2]);
-
-        if (in_array($familia, $familiasPermitidas)) {
-            $famCicles[$familia][] = $cicle;
-        }
-    }
-    fclose($h);
-}
-
 /* -------------------------------------------------
-   2. TAGS (familias → ciclos)
+   2. TAGS (familias y ciclos)
 -------------------------------------------------- */
-
-echo "🏷️ Creando tags FP...\n";
+echo "🏷️ Creando tags...\n";
 
 $tagCicles = [];
 
@@ -62,7 +77,7 @@ foreach ($famCicles as $familia => $cicles) {
 
     $familiaId = $pdo->lastInsertId();
 
-    foreach (array_unique($cicles) as $cicle) {
+    foreach ($cicles as $cicle) {
         $pdo->prepare(
             "INSERT INTO tags (nom, parent_id, tipus)
              VALUES (?, ?, 'cicle')"
@@ -75,12 +90,10 @@ foreach ($famCicles as $familia => $cicles) {
 /* -------------------------------------------------
    3. CENTROS (20 FIJOS)
 -------------------------------------------------- */
-
 echo "🏫 Creando centros...\n";
 
 $centres = [
-    'Institut Tecnològic Barcelona',
-    'Institut FP Girona',
+    'Institut Tecnològic de Barcelona',
     'Institut La Ribera',
     'Institut Montsià',
     'Institut Vallès',
@@ -90,7 +103,7 @@ $centres = [
     'Institut Manresa',
     'Institut Lleida FP',
     'Institut Tarragonès',
-    'Institut Ebre',
+    'Institut de l’Ebre',
     'Institut Maresme',
     'Institut Garrotxa',
     'Institut Osona',
@@ -98,20 +111,24 @@ $centres = [
     'Institut Priorat',
     'Institut Segrià',
     'Institut Berguedà',
-    'Institut Ripollès'
+    'Institut Ripollès',
+    'Institut Escola del Treball'
 ];
 
 $centreIds = [];
 
 foreach ($centres as $i => $nom) {
+
+    $email = strtolower(preg_replace('/[^a-zA-Z]/', '', $nom)) . '@edu.cat';
+
     $pdo->prepare(
         "INSERT INTO centres (nom, email, descripcio, logo)
          VALUES (?, ?, ?, ?)"
     )->execute([
         $nom,
-        strtolower(str_replace(' ', '', $nom)) . '@edu.cat',
-        "Centre de Formació Professional especialitzat en projectes reals.",
-        "centre" . ($i+1) . ".png"
+        $email,
+        "Centre de Formació Professional amb projectes reals.",
+        "centre" . ($i + 1) . ".png"
     ]);
 
     $centreIds[] = $pdo->lastInsertId();
@@ -120,25 +137,30 @@ foreach ($centres as $i => $nom) {
 /* -------------------------------------------------
    4. EMPRESAS (20 FIJAS)
 -------------------------------------------------- */
-
 echo "🏢 Creando empresas...\n";
 
-for ($i = 1; $i <= 20; $i++) {
+$empreses = [
+    'Google', 'Microsoft', 'Amazon', 'Apple', 'IBM',
+    'HP', 'Intel', 'Accenture', 'Capgemini', 'Mercedes-Benz',
+    'Indra', 'Siemens', 'PayPal', 'Deloitte', 'Coca-Cola',
+    'YouTube', 'Telefónica', 'CaixaBank', 'Banc Sabadell', 'Nestlé'
+];
+
+foreach ($empreses as $i => $nom) {
     $pdo->prepare(
         "INSERT INTO empreses (nom, email, descripcio, logo)
          VALUES (?, ?, ?, ?)"
     )->execute([
-        "Empresa FP {$i}",
-        "empresa{$i}@empresa.cat",
+        $nom,
+        strtolower($nom) . '@empresa.com',
         "Empresa col·laboradora amb centres de FP.",
-        "empresa{$i}.png"
+        "empresa" . ($i + 1) . ".png"
     ]);
 }
 
 /* -------------------------------------------------
-   5. VÍDEOS (6 FIJOS, 6 CENTROS)
+   5. VÍDEOS (6 vídeos / 6 centros)
 -------------------------------------------------- */
-
 echo "🎬 Creando vídeos...\n";
 
 $videos = [
@@ -152,22 +174,27 @@ $videos = [
 
 foreach ($videos as $i => $v) {
 
-    $dest = "fp_video_" . ($i+1) . ".mp4";
-    copy($videosDir . '/' . $v['file'], $uploadsDir . '/' . $dest);
+    $src  = $videosDir . $v['file'];
+    $dest = "fp_video_" . ($i + 1) . ".mp4";
+
+    if (!file_exists($src)) {
+        throw new Exception("No existe el vídeo {$v['file']}");
+    }
+
+    copy($src, $uploadsDir . $dest);
 
     $pdo->prepare(
         "INSERT INTO videos (centre_id, titol, descripcio, fitxer, durada)
          VALUES (?, ?, ?, ?, 5)"
     )->execute([
         $centreIds[$i],
-        "Projecte FP " . ($i+1),
+        "Projecte FP " . ($i + 1),
         "Projecte real del centre " . $centres[$i],
         $dest
     ]);
 
     $videoId = $pdo->lastInsertId();
 
-    /* Asignar TODOS los ciclos de su familia */
     foreach ($tagCicles[$v['familia']] as $tagId) {
         $pdo->prepare(
             "INSERT INTO video_tags (video_id, tag_id)
@@ -176,4 +203,10 @@ foreach ($videos as $i => $v) {
     }
 }
 
-echo "✅ Seeder completado (determinista)\n";
+$pdo->commit();
+echo "✅ Seeder ejecutado correctamente\n";
+
+} catch (Exception $e) {
+    $pdo->rollBack();
+    echo "❌ Error: " . $e->getMessage() . "\n";
+}
