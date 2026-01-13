@@ -17,6 +17,7 @@ create table if not exists users (
   username varchar(100) not null,
   entity_name varchar(255) not null,
   entity_type enum('center', 'company') not null,
+  logo_image MEDIUMBLOB not null,
   presentation text
 );
 
