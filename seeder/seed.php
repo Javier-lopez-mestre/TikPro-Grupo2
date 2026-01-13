@@ -37,6 +37,36 @@ for ($i = 1; $i <= 6; $i++) {
     }
 }
 
+/* -------------------------------------------------
+   COPIAR LOGOS A UPLOADS
+-------------------------------------------------- */
+echo "🎥 Copiando logos a uploads...\n";
+
+$sourceDir = __DIR__ . '/logos/';
+$targetDir = __DIR__ . '/../uploads/logos/';
+
+if (!is_dir($targetDir)) {
+    mkdir($targetDir, 0777, true);
+}
+
+$name_logos = [
+    "adobe", "airbnb", "amazon", "apple","cocacola","faceboock", "google", "ibm", "insanoia", "insbaixcamp", "insbesos", 
+    "insdelta", "insebre", "insesteve", "insgarrotxa", "insjoanXXIII", "inslessalines", "insmaresme", "insmartipol", 
+    "insmediterrani", "insmontsia", "inspalafrugell", "inspenedes", "inspirineus", "insriberabaixa", "instecbcn", "insvalles", 
+    "insvic", "intel", "mercedes", "microsoft", "netflix", "oracle", "paypal", "samsumg", "sony", "sportify", "tesla", "uber", "youtube"
+];
+
+for ($i = 1; $i <= 40; $i++) {
+    $sourceFile = $sourceDir . $name_logos[$i-1] . ".png";
+    $targetFile = $targetDir . $name_logos[$i-1] . ".png";
+
+    if (file_exists($sourceFile)) {
+        copy($sourceFile, $targetFile);
+    } else {
+        echo "⚠️ No se encontró: " . $name_logos[$i-1] . ".png\n";
+    }
+}
+
 
 try {
 
@@ -215,38 +245,49 @@ try {
         'Airbnb', 'Spotify', 'PayPal', 'YouTube'
     ];
 
+    $centro_logo = [
+        'instecbcn', 'insriberabaixa', 'insmontsia', 'insvalles', 'insjoanXXIII', 'insdelta', 'insmediterrani', 'inspirineus', 'insbesos', 'insgarrotxa',
+        'insebre', 'insmaresme', 'inspenedes', 'insmartipol', 'inspalafrugell', 'inslessalines', 'insanoia', 'insbaixcamp', 'insvic', 'insesteve'
+    ];
 
     // Centros
     foreach ($centres as $i => $nom) {
         $email = strtolower(preg_replace('/[^a-zA-Z]/', '', $nom)) . '@edu.cat';
         $username = 'center' . ($i + 1);
         $pdo->prepare(
-            "INSERT INTO users (email, password, username, entity_name, entity_type, presentation)
-             VALUES (?, ?, ?, ?, ?, ?)"
+            "INSERT INTO users (email, password, username, entity_name, entity_type, presentation, logo_image)
+             VALUES (?, ?, ?, ?, ?, ?, ?)"
         )->execute([
             $email,
             hash('sha256','constraseña' . $i),
             $username,
             $nom,
             'Center',
-            "Usuario del centro $nom"
+            "Usuario del centro $nom",
+            "../uploads/logos/" . $centro_logo[$i] . ".png"
         ]);
     }
+
+    $empresa_logo = [
+        'google', 'microsoft', 'amazon', 'apple', 'faceboock', 'ibm', 'intel', 'oracle', 'samsumg', 'sony', 'cocacola', 'mercedes',
+        'netflix', 'tesla', 'adobe', 'uber', 'airbnb', 'spotify', 'paypal', 'youtube'
+    ];
 
     // Empresas
     foreach ($empreses as $i => $nom) {
         $email = strtolower(preg_replace('/[^a-zA-Z]/', '', $nom)) . '@empresa.com';
         $username = 'company' . ($i + 1);
         $pdo->prepare(
-            "INSERT INTO users (email, password, username, entity_name, entity_type, presentation)
-             VALUES (?, ?, ?, ?, ?, ?)"
+            "INSERT INTO users (email, password, username, entity_name, entity_type, presentation, logo_image)
+             VALUES (?, ?, ?, ?, ?, ?, ?)"
         )->execute([
             $email,
             hash('sha256','password' . $i),
             $username,
             $nom,
             'Company',
-            "Usuario de la empresa $nom"
+            "Usuario de la empresa $nom",
+            "../uploads/logos/" . $empresa_logo[$i] . ".png",
         ]);
     }
 
@@ -286,7 +327,7 @@ try {
         )->execute([
             $projects_titles[$i],
             $descriptions[$i],
-            "../uploads/" . $projects_videos[$i] . ".mp4",
+            "../uploads/videos/" . $projects_videos[$i] . ".mp4",
             date('Y-m-d'),
             'Active',
             $id_empresas[$i]
