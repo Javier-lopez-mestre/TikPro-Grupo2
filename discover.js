@@ -1,34 +1,19 @@
-let projectQueue = [];
-let isLoading = false;
+let projectQueue = [...(window.PROJECTS || [])];
 
 /* =========================
-   PRELOAD PROJECTS (AJAX)
-   ========================= */
-async function preloadProjects(n = 2) {
-    if (isLoading) return;
-    isLoading = true;
-
-    const response = await fetch(`api/get_project.php?n=${n}`);
-    const data = await response.json();
-
-    projectQueue.push(...data);
-    isLoading = false;
-}
-
-/* =========================
-   CREATE CARD (DOM)
+   CREATE CARD
    ========================= */
 function createProjectCard(project) {
     const card = document.createElement("div");
     card.className = "project-card";
 
     card.innerHTML = `
-        <video src="${project.video}" autoplay muted loop></video>
+        <video src="${project.Video}" autoplay muted loop></video>
 
         <div class="project-info hidden">
-            <p>${project.description}</p>
+            <p>${project.Description}</p>
             <div class="tags">
-                ${project.tags.map(tag => `<span>#${tag}</span>`).join("")}
+                ${(project.tags || []).map(tag => `<span>#${tag}</span>`).join("")}
             </div>
         </div>
 
@@ -38,19 +23,19 @@ function createProjectCard(project) {
         </div>
     `;
 
-    addCardEvents(card, project.id);
+    addCardEvents(card);
     return card;
 }
 
 /* =========================
    EVENTS
    ========================= */
-function addCardEvents(card, projectId) {
-    card.querySelector(".like").onclick = () => handleAction(card, projectId, "like");
-    card.querySelector(".nope").onclick = () => handleAction(card, projectId, "nope");
+function addCardEvents(card) {
+    card.querySelector(".like").onclick = () => handleAction(card, "like");
+    card.querySelector(".nope").onclick = () => handleAction(card, "nope");
 }
 
-function handleAction(card, projectId, action) {
+function handleAction(card, action) {
     card.classList.add(action === "like" ? "swipe-right" : "swipe-left");
 
     setTimeout(() => {
@@ -60,7 +45,6 @@ function handleAction(card, projectId, action) {
 
     if (action === "like") {
         showLikeNotification();
-        sendLike(projectId);
     }
 }
 
@@ -68,19 +52,12 @@ function handleAction(card, projectId, action) {
    LOAD NEXT PROJECT
    ========================= */
 function loadNextProject() {
-    if (projectQueue.length === 0) {
-        preloadProjects();
-        return;
-    }
+    if (projectQueue.length === 0) return;
 
     const project = projectQueue.shift();
     const card = createProjectCard(project);
 
     document.getElementById("discover-container").appendChild(card);
-
-    if (projectQueue.length < 2) {
-        preloadProjects();
-    }
 }
 
 /* =========================
@@ -94,31 +71,18 @@ function showLikeNotification() {
     notif.onclick = () => window.location.href = "chat.php";
 
     document.body.appendChild(notif);
-
     setTimeout(() => notif.remove(), 2500);
-}
-
-/* =========================
-   SEND LIKE (AJAX)
-   ========================= */
-function sendLike(projectId) {
-    fetch("api/like_project.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId })
-    });
 }
 
 /* =========================
    DETAILS TOGGLE
    ========================= */
-document.getElementById("nav-details").onclick = () => {
+document.getElementById("nav-details")?.addEventListener("click", () => {
     const info = document.querySelector(".project-card .project-info");
     if (info) info.classList.toggle("hidden");
-};
+});
 
 /* =========================
    INIT
    ========================= */
-preloadProjects();
 loadNextProject();
