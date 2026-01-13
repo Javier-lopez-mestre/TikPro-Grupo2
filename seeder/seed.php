@@ -12,6 +12,30 @@ include('../config/database.php');
 
 echo "🚀 Iniciando seeder...\n";
 
+/* -------------------------------------------------
+   COPIAR VÍDEOS A UPLOADS
+-------------------------------------------------- */
+echo "🎥 Copiando vídeos a uploads...\n";
+
+$sourceDir = __DIR__ . '/videos/';
+$targetDir = __DIR__ . '/../uploads/';
+
+if (!is_dir($targetDir)) {
+    mkdir($targetDir, 0777, true);
+}
+
+for ($i = 1; $i <= 6; $i++) {
+    $sourceFile = $sourceDir . "proyecto{$i}.mp4";
+    $targetFile = $targetDir . "proyecto{$i}.mp4";
+
+    if (file_exists($sourceFile)) {
+        copy($sourceFile, $targetFile);
+    } else {
+        echo "⚠️ No se encontró: proyecto{$i}.mp4\n";
+    }
+}
+
+
 try {
 
     /* -------------------------------------------------
