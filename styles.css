@@ -298,7 +298,6 @@
     color: #ff4d6d;
     font-weight: bold;
 }
-
 #bottom-nav {
     position: fixed;
     bottom: 0;
@@ -308,6 +307,26 @@
     justify-content: space-around;
     padding: 10px 0;
 }
+
+#bottom-nav button,
+#bottom-nav .logout-button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    text-decoration: none; /* Para el enlace */
+    transition: background 0.3s, transform 0.2s;
+}
+
+#bottom-nav button:hover,
+#bottom-nav .logout-button:hover {
+    background: var(--color-secondary);
+    transform: translateY(-2px);
+}
+
 
 .like-notification {
     position: fixed;
@@ -332,4 +351,77 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+
+
+/* =========================
+   MENSAJES DE NOTIFICACIÓN
+   ========================= */
+/* Contenedor base */
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: auto;
+    transition: opacity 0.4s, transform 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 250px;
+}
+
+/* Tipos de notificación */
+.notification.info {
+    background: #007bff; /* Azul */
+}
+
+.notification.warning {
+    background: #ffc107; /* Amarillo */
+    color: #333;
+}
+
+.notification.error {
+    background: #e63946; /* Rojo */
+}
+
+/* Botón de cerrar */
+.notification .close-btn {
+    margin-left: 15px;
+    background: rgba(255,255,255,0.3);
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.notification.warning .close-btn {
+    color: #333;
+}
+
+.notification .close-btn:hover {
+    background: rgba(255,255,255,0.6);
+}
+
+/* Mostrar la notificación */
+.notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }

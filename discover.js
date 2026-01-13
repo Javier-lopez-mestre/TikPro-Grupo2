@@ -1,3 +1,5 @@
+import { showNotification } from './notificaciones.js';
+
 let projectQueue = [...(window.PROJECTS || [])];
 
 /* =========================
@@ -43,8 +45,12 @@ function handleAction(card, action) {
         loadNextProject();
     }, 400);
 
+    /* =========================
+        LIKE NOTIFICATION
+    ========================= */
+
     if (action === "like") {
-        showLikeNotification();
+        showNotification("info","💖 Match! Anar al xat");
     }
 }
 
@@ -58,20 +64,6 @@ function loadNextProject() {
     const card = createProjectCard(project);
 
     document.getElementById("discover-container").appendChild(card);
-}
-
-/* =========================
-   LIKE NOTIFICATION
-   ========================= */
-function showLikeNotification() {
-    const notif = document.createElement("div");
-    notif.className = "like-notification";
-    notif.textContent = "💖 Match! Anar al xat";
-
-    notif.onclick = () => window.location.href = "chat.php";
-
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 2500);
 }
 
 /* =========================

@@ -50,8 +50,10 @@ while ($row = $stmt->fetch()) {
 <nav id="bottom-nav">
     <button id="nav-profile">👤</button>
     <button id="nav-chat">💬</button>
-    <button id="nav-details">ℹ️</button>
+    <a href="logout.php" id="nav-logout" class="logout-button">🚪</a>
 </nav>
+
+<script type="module" src="discover.js"></script>
 
 <!-- Passar projectes a JS -->
 <script>

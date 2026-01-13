@@ -7,7 +7,7 @@ if (!empty($_SESSION['user_email'])) {
     exit;
 }
 
-include("database.php"); // Misma BD que el seeder
+include("config/database.php");
 
 $error = "";
 
