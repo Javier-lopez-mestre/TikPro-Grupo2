@@ -17,7 +17,7 @@ create table if not exists users (
   username varchar(100) not null,
   entity_name varchar(255) not null,
   entity_type enum('center', 'company') not null,
-  logo_image MEDIUMBLOB not null,
+  logo_image varchar(255) not null,
   presentation text
 );
 
@@ -28,7 +28,7 @@ create table if not exists projects (
   description text not null,
   date_creation date not null,
   state enum('active', 'finished', 'archived') not null,
-  id_owner int not null,
+  id_owner int not null, 
   video varchar(255) not null,
   foreign key (id_owner) references users(id_user)
 );
