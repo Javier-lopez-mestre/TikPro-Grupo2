@@ -12,25 +12,19 @@ if (empty($_SESSION['user_email'])) {
 // ====== CARGAR PROJECTES DES DE LA BD ======
 $stmt = $pdo->query("
     SELECT 
-        p.ID_Project,
-        p.Description,
-        p.Video,
-        GROUP_CONCAT(c.name_category) AS tags
-    FROM Projects p
-    LEFT JOIN Projects_Categories pc ON p.ID_Project = pc.ID_Project
-    LEFT JOIN Categories c ON pc.ID_Category = c.ID_Category
-    WHERE p.State = 'Active'
-    GROUP BY p.ID_Project
+        id_project,
+        description,
+        video
+    FROM projects;
 ");
 
 $projects = [];
 
-while ($row = $stmt->fetch()) {
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $projects[] = [
-        "ID_Project" => $row["ID_Project"],
-        "Description" => $row["Description"],
-        "Video" => $row["Video"],
-        "tags" => $row["tags"] ? explode(",", $row["tags"]) : []
+        "ID_Project" => $row["id_project"],
+        "Description" => $row["description"],
+        "Video" => $row["video"],
     ];
 }
 ?>
@@ -53,11 +47,11 @@ while ($row = $stmt->fetch()) {
     <a href="logout.php" id="nav-logout" class="logout-button">🚪</a>
 </nav>
 
-<script type="module" src="discover.js"></script>
-
 <!-- Passar projectes a JS -->
 <script>
     window.PROJECTS = <?= json_encode($projects, JSON_UNESCAPED_UNICODE) ?>;
+    console.log(window.PROJECTS);
+    console.log(document.getElementById('discover-container'));
 </script>
 <script src="discover.js"></script>
 </body>

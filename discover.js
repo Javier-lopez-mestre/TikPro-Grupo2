@@ -14,9 +14,6 @@ function createProjectCard(project) {
 
         <div class="project-info hidden">
             <p>${project.Description}</p>
-            <div class="tags">
-                ${(project.tags || []).map(tag => `<span>#${tag}</span>`).join("")}
-            </div>
         </div>
 
         <div class="actions">

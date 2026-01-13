@@ -1,5 +1,4 @@
 <?php
-session_start();
 // === CONFIGURACIÓN BD ===
 $host = 'localhost';
 $db   = 'simbiodb';
