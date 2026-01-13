@@ -18,7 +18,7 @@ echo "🚀 Iniciando seeder...\n";
 echo "🎥 Copiando vídeos a uploads...\n";
 
 $sourceDir = __DIR__ . '/videos/';
-$targetDir = __DIR__ . '/../uploads/';
+$targetDir = __DIR__ . '/../uploads/videos/';
 
 if (!is_dir($targetDir)) {
     mkdir($targetDir, 0777, true);
@@ -200,10 +200,10 @@ try {
         'Institut Mediterrani', 'Institut Pirineu',
         'Institut Besòs', 'Institut Garrotxa',
         'Institut Ebre', 'Institut Maresme',
-        'Institut Penedès', 'Institut Segrià',
-        'Institut Empordà', 'Institut Garraf',
-        'Institut Anoia', 'Institut Baix Llobregat',
-        'Institut Osona', 'Institut Esteve Terradas i Illa'
+        'Institut Penedès', 'Institut Miquel Martí i Pol',
+        'Institut Empordà', 'Institut Les Salines',
+        'Institut Anoia', 'Institut Baix Camp',
+        'Institut Vic', 'Institut Esteve Terradas i Illa'
     ];
 
 
