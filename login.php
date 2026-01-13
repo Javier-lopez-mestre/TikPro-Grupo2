@@ -1,14 +1,14 @@
 <?php
 session_start();
-include("database.php"); // Debe apuntar a la MISMA BD que el seeder
 
-// === REDIRIGIR SI YA ESTÁ LOGUEADO ===
-if (isset($_SESSION['user_email'])) {
-    header("Location: ola.php");
+// Si ya hay sesión, redirige a discover
+if (!empty($_SESSION['user_email'])) {
+    header("Location: discover.php");
     exit;
 }
 
-// === PROCESAR LOGIN ===
+include("database.php"); // Misma BD que el seeder
+
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($email && $password) {
 
-        // MISMO hash que el seeder
+        // Hash igual que el seeder
         $password_hashed = hash('sha256', $password);
 
         $stmt = $pdo->prepare(
@@ -26,7 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
              WHERE Email = ? AND Password = ? 
              LIMIT 1"
         );
-
         $stmt->execute([$email, $password_hashed]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

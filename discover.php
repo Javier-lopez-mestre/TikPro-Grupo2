@@ -1,14 +1,15 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_email'])) {
+include("config/database.php");
+
+// === REDIRECCIONAR SI NO HI HA SESSIÓ ===
+if (empty($_SESSION['user_email'])) {
     header("Location: login.php");
     exit;
 }
 
-include("database.php");
-
-// ====== CARGAR PROYECTOS DESDE LA BD ======
+// ====== CARGAR PROJECTES DES DE LA BD ======
 $stmt = $pdo->query("
     SELECT 
         p.ID_Project,
@@ -43,7 +44,7 @@ while ($row = $stmt->fetch()) {
 <body id="discover-body">
 
 <main id="discover-container">
-    <!-- Cards creadas dinámicamente -->
+    <!-- Cards es crearan des de JS -->
 </main>
 
 <nav id="bottom-nav">
@@ -52,7 +53,7 @@ while ($row = $stmt->fetch()) {
     <button id="nav-details">ℹ️</button>
 </nav>
 
-<!-- PASAR LOS PROYECTOS A JS -->
+<!-- Passar projectes a JS -->
 <script>
     window.PROJECTS = <?= json_encode($projects, JSON_UNESCAPED_UNICODE) ?>;
 </script>
