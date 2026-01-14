@@ -42,13 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Inicia Sesio</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="icono-simbio.png" type="image/png">
 </head>
 <body id="login-body">
 <header class="main-header">

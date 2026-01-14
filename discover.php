@@ -11,6 +11,7 @@
     <meta charset="UTF-8">
     <title>Descobrir</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="icono-simbio.png" type="image/png">
 </head>
 <body id="discover-body">
     <header class="header-discovered">
@@ -28,9 +29,9 @@
 
         // Mostrar el nombre
         if ($user) {
-            echo "<h1> Bienvenido, " . htmlspecialchars($user['username']) . "</h1>";
+            echo "<h1> Benvingut, " . htmlspecialchars($user['username']) . "</h1>";
         } else {
-            echo "<h1>Usuario no encontrado</h1>";
+            echo "<h1>Usuari no encontrat</h1>";
         }
         ?>
     </header>
