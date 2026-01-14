@@ -74,13 +74,13 @@ function createCard(projectData) {
         playsinline: true 
     });
 
-    const infoButton = createElement("<button></button>", divCard, "info-toggle").text("Mostrar info");
+    const infoButton = createElement("<button></button>", divCard, "info-toggle").text("Mostra info");
 
     const divInfo = createElement("<div></div>", divCard, "project-info hidden");
 
     infoButton.on("click", () => {
         divInfo.toggleClass("hidden");
-        infoButton.text(divInfo.hasClass("hidden") ? "Mostrar info" : "Ocultar info");
+        infoButton.text(divInfo.hasClass("hidden") ? "Mostra info" : "Amagar info");
         sendLog(`Usuario ${<?php echo json_encode($user['username']); ?>} toggle info: ${divInfo.hasClass("hidden") ? 'oculto' : 'visible'}`);
     });
 
