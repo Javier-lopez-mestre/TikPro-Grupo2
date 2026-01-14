@@ -199,60 +199,123 @@
         0 8px 20px rgba(255, 77, 109, 0.4);
 }
 
-
-
+header h1 {
+    font-family: 'Arial', sans-serif; /* fuente */
+    font-size: 2.5rem;                 /* tamaño grande */
+    color: #ffffff;                    /* color del texto */
+    text-align: center;                /* centrar el texto */
+    margin: 0;                    /* margen superior e inferior */
+    background: linear-gradient(135deg, #ff7e5f, #feb47b); /* degradado */
+    letter-spacing: 1px;               /* separación entre letras */
+}
 
 /*DISCOVER.PHP */
 
 #discover-body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: var(--font-primary);
     background: linear-gradient(135deg, #ff4d6d, #ff8c42);
     height: 100vh;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 #discover-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    justify-content: center;  /* centra horizontal */
+    align-items: center;      /* centra vertical */
+    height: 100vh;
+    padding-top: 0;           /* eliminar padding que rompe la verticalidad */
+    padding-bottom: 80px;     /* mantener espacio para nav si quieres */
+    position: relative;
 }
 
+/* Ajustar las project-card para que respeten header y nav */
 .project-card {
-    width: 860px; /* antes 320px */
+    width: 90%;              /* ocupa la mayor parte del ancho */
+    max-width: 50%;        /* límite en pantallas grandes */
+    height: auto;            /* altura automática */
     background: white;
     border-radius: 20px;
-    padding: 30px; /* un poco más de padding */
+    padding: 20px;
     text-align: center;
-    position: absolute;
+    position: relative;      /* cambiar de absolute */
     box-shadow: 0 25px 50px rgba(0,0,0,0.3);
     animation: fadeIn 0.4s ease;
+    overflow: hidden;        /* evitar que el video sobresalga */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .project-card video {
-    width: 100%;
+    width: 100%;            /* ocupa todo el ancho de la tarjeta */
+    height: auto;           /* mantiene proporción */
+    max-height: 60vh;       /* nunca más alto que la pantalla */
     border-radius: 16px;
-    max-height: 700px; /* antes sin límite, ahora más grande */
-    object-fit: cover;
+    object-fit: cover;      /* recorta si es necesario */
+}
+
+/* Ajustes móviles grandes */
+@media (max-width: 480px) {
+    #discover-container {
+        flex-direction: column;      
+        justify-content: flex-start;  
+        align-items: center;
+        padding-top: 100px;           /* espacio para header */
+        padding-bottom: 80px;         /* espacio para nav */
+        height: calc(100vh - 180px);  /* altura total disponible */
+    }
+
+    .project-card {
+        width: 98%;                  /* casi todo el ancho */
+        max-width: 95%;              /* un poco más ancho */
+        padding: 20px;
+        border-radius: 16px;
+        position: relative;
+        max-height: calc(100%);      /* altura máxima disponible */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .project-card video {
+        width: 100%;
+        height: auto;
+        max-height: 75vh;            /* más alto que antes */
+        border-radius: 12px;
+        object-fit: cover;
+    }
+
+    .actions button {
+        padding: 14px;
+        font-size: 1.05rem;
+    }
 }
 
 .actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 30px; /* un poco más de espacio respecto al vídeo */
+    margin-top: 20px;
+    gap: 10px;           /* separación entre botones */
 }
 
 .actions button {
-    width: 48%; /* botones más grandes, antes 45% */
-    padding: 16px; /* antes 12px */
-    font-size: 1.1rem; /* más grande */
+    flex: 1;              /* ambos botones ocupan el mismo espacio */
+    padding: 14px;
+    font-size: 1rem;
     border: none;
-    border-radius: 14px; /* un poco más redondeado */
+    border-radius: 12px;
     font-weight: bold;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
 
 .like {
     background: #ff4d6d;

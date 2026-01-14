@@ -8,7 +8,7 @@ if (php_sapi_name() !== 'cli') {
     exit("Solo se puede ejecutar desde CLI\n");
 }
 
-include('../config/database.php');
+include('../includes/database.php');
 
 echo "🚀 Iniciando seeder...\n";
 

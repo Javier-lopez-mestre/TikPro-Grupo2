@@ -2,12 +2,12 @@
 session_start();
 
 // Si ya hay sesión, redirige a discover
-if (!empty($_SESSION['user_email'])) {
+if (!empty($_SESSION['user_id'])) {
     header("Location: discover.php");
     exit;
 }
 
-include("config/database.php");
+include("includes/database.php");
 
 $error = "";
 
@@ -21,17 +21,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $password_hashed = hash('sha256', $password);
 
         $stmt = $pdo->prepare(
-            "SELECT ID_User, Email 
-             FROM Users 
-             WHERE Email = ? AND Password = ? 
+            "SELECT id_user, email 
+             FROM users 
+             WHERE email = ? AND password = ? 
              LIMIT 1"
         );
         $stmt->execute([$email, $password_hashed]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            $_SESSION['user_email'] = $user['Email'];
-            $_SESSION['user_id']    = $user['ID_User'];
+            $_SESSION['user_id']    = $user['id_user'];
 
             header("Location: discover.php");
             exit;
