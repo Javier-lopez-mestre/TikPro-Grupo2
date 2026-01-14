@@ -92,8 +92,8 @@ function createCard(projectData) {
     });
 
     const divButtons = createElement("<div></div>", divCard, "actions");
-    const btnNope = createElement("<button></button>", divButtons, "nope").text("Like");
-    const btnLike = createElement("<button></button>", divButtons, "like").text("Nope");
+    const btnNope = createElement("<button></button>", divButtons, "nope").text("Nope");
+    const btnLike = createElement("<button></button>", divButtons, "like").text("Like");
 
     btnNope.on("click", () => sendLog(`Usuario ${<?php echo json_encode($user['username']); ?>} presionó Like en proyecto ${projectData.id_project}`));
     btnLike.on("click", () => sendLog(`Usuario ${<?php echo json_encode($user['username']); ?>} presionó Nope en proyecto ${projectData.id_project}`));
