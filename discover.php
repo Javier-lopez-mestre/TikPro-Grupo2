@@ -144,10 +144,11 @@ async function readDB() {
     });
 }
 
+while (projectsData.length-1 < 3) {
+    await readDB();
+}
+
 async function loadCard() {
-    while (projectsData.length-1 < 3) {
-        await readDB();
-    }
 
     if (projectsData.length === 0) {
         showNotification("error","No hi ha projectes");
@@ -163,6 +164,10 @@ async function loadCard() {
     const cardDoom = createCard(projectsData[0]);
     addCardEvents(cardDoom); 
     $("#discover-container").append(cardDoom);
+
+    while (projectsData.length-1 < 3) {
+        await readDB();
+    }
 
     return true;
 }
